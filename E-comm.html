@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-comm web</title>
+    <link rel="stylesheet" href="Ecomm.css">
+</head>
+
+<body>
+
+    <h1 class="h1tag">E-comm web</h1>
+
+    <div class="container">
+
+        <div class="Categorylist">
+            <h1>Category</h1>
+            <aside>
+
+                <ul>
+
+
+                </ul>
+            </aside>
+        </div>
+
+        <div class="products">
+            <h1>products</h1>
+            <div class="productOuter">
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+    let Categorylist = document.querySelector(".container aside ul");
+
+    let productOuter = document.querySelector(".productOuter");
+
+
+    let getcategory = async () => {
+
+        Categorylist.innerHTML = '';
+
+
+        let catData = await fetch(`https://dummyjson.com/products/category-list`);
+        let finalres = await catData.json();
+
+
+        let lirows = '';
+        finalres.forEach((catitems, index) => {
+            lirows += `<li onclick="getproduct('${catitems}')">${catitems}</li>`
+        })
+
+        Categorylist.innerHTML = lirows;
+    }
+
+
+
+
+
+
+    let getproduct = async (Catname = '') => {
+
+        productOuter.innerHTML = '';
+        let apiurl;
+        if (Catname === '') {
+            apiurl = fetch(`https://dummyjson.com/products`)
+        }
+        else {
+            apiurl = fetch(`https://dummyjson.com/products/category/${Catname}`)
+        }
+
+        let fetchData = await (apiurl);
+        let finalrespo = await fetchData.json()
+
+        let { products } = finalrespo;
+
+        let proitems = '';
+
+        products.forEach((items, index) => {
+
+            console.log(items)
+
+            proitems += ` <div class="productsItems">
+                    <img src="${items.thumbnail}"alt="">
+                    <div class="product-body">
+
+                        <h4> ${items.title}</h4> </br>
+                        <h4>₹ ${items.price}</h4>
+                        <h5>brand -- ${items.brand}</h5>
+                        
+
+                    </div>
+                </div>`
+        })
+
+        productOuter.innerHTML =proitems;
+
+
+    }
+
+
+    getproduct();
+    getcategory();
+</script>
+
+</html>
